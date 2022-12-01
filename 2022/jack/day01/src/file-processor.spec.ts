@@ -1,8 +1,8 @@
 import FileProcessor from './file-processor';
 
 describe('FileProcessor()', () => {
-  it('should convert a text file of lines into an array of number arrays', async () => {
-    const result = await FileProcessor.processInputIntoInventories(
+  it('should convert a text file of lines into an array of number arrays', () => {
+    const result = FileProcessor.processInputIntoInventories(
       'src/example-input.txt'
     );
     const expected = [
