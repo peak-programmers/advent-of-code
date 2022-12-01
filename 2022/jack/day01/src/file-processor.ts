@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as readline from 'readline';
 
 export default class FileProcessor {
   public static processInputIntoInventories(inputPath: string): number[][] {
