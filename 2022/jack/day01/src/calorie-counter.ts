@@ -1,5 +1,5 @@
 export default class CalorieCounter {
-  public static getMaxInventoryValue(elfInventories: number[][]): number {
+  public static calculateMaxInventoryValue(elfInventories: number[][]): number {
     const sumInventoriesReducer = (
       acc: number[],
       element: number[]
@@ -8,6 +8,21 @@ export default class CalorieCounter {
     };
 
     return Math.max(...elfInventories.reduce(sumInventoriesReducer, []));
+  }
+
+  public static calculateSumOfTopThree(elfInventories: number[][]): number {
+    const sumInventoriesReducer = (
+      acc: number[],
+      element: number[]
+    ): number[] => {
+      return [...acc, this.sumCalories(element)];
+    };
+
+    const sorted = elfInventories
+      .reduce(sumInventoriesReducer, [])
+      .sort((a, b) => b - a);
+
+    return this.sumCalories([sorted[0], sorted[1], sorted[2]]);
   }
 
   private static sumCalories(foodItems: number[]): number {

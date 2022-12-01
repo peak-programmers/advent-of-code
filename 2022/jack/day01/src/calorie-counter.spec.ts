@@ -10,6 +10,20 @@ describe('CalorieCounter()', () => {
       [10000],
     ];
 
-    expect(CalorieCounter.getMaxInventoryValue(elfInventories)).toBe(24000);
+    expect(CalorieCounter.calculateMaxInventoryValue(elfInventories)).toBe(
+      24000
+    );
+  });
+
+  it('should return the sum of the top three elfInventories', () => {
+    const elfInventories = [
+      [1000, 2000, 3000],
+      [4000],
+      [5000, 6000],
+      [7000, 8000, 9000],
+      [10000],
+    ];
+
+    expect(CalorieCounter.calculateSumOfTopThree(elfInventories)).toBe(45000);
   });
 });
