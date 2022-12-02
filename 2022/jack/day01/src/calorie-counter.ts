@@ -4,11 +4,12 @@ export default class CalorieCounter {
   }
 
   public static calculateSumOfTopThree(elfInventories: number[][]): number {
-    const sortedCalorieSumDesc = elfInventories
+    const topThree = elfInventories
       .reduce(this.sumInventoriesReducer, [])
-      .sort((a, b) => b - a);
+      .sort((a, b) => b - a)
+      .slice(0, 3);
 
-    return this.sumCalories(sortedCalorieSumDesc.slice(0, 3));
+    return this.sumCalories(topThree);
   }
 
   private static sumInventoriesReducer(
