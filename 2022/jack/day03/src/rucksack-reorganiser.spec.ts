@@ -43,14 +43,16 @@ describe('RucksackReorganiser()', () => {
       ],
       expected: 18,
     },
-    // {
-    //   input: [
-    //     new Rucksack('wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn'),
-    //     new Rucksack('ttgJtRGJQctTZtZT'),
-    //     new Rucksack('CrZsJsPPZsGzwwsLwLmpwMDw'),
-    //   ],
-    //   expected: 52,
-    // },
+    {
+      input: [
+        new RucksackGroup([
+          new Rucksack('wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn'),
+          new Rucksack('ttgJtRGJQctTZtZT'),
+          new Rucksack('CrZsJsPPZsGzwwsLwLmpwMDw'),
+        ]),
+      ],
+      expected: 52,
+    },
   ])(
     `should return the priority $expected of the item type shared between a group of rucksacks`,
     ({ input, expected }) => {
@@ -59,4 +61,23 @@ describe('RucksackReorganiser()', () => {
       );
     }
   );
+
+  it('should calculate the priority sum of multiple rucksack compartments', () => {
+    const input: RucksackGroup[] = [
+      new RucksackGroup([
+        new Rucksack('vJrwpWtwJgWrhcsFMMfFFhFp'),
+        new Rucksack('jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL'),
+        new Rucksack('PmmdzqPrVvPwwTWBwg'),
+      ]),
+      new RucksackGroup([
+        new Rucksack('wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn'),
+        new Rucksack('ttgJtRGJQctTZtZT'),
+        new Rucksack('CrZsJsPPZsGzwwsLwLmpwMDw'),
+      ]),
+    ];
+
+    expect(RucksackReorganiser.calculateGroupSharedPriorityTotal(input)).toBe(
+      70
+    );
+  });
 });

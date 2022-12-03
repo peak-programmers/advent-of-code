@@ -13,6 +13,14 @@ export default class RucksackGroup {
     this.rucksackGroup.push(rucksack);
   }
 
+  public get length() {
+    return this.rucksackGroup.length;
+  }
+
+  public get groupContents() {
+    return this.rucksackGroup.map((rucksack) => rucksack.contents);
+  }
+
   public calculateSharedPriority(): number {
     if (this.rucksackGroup.length !== this.expectedGroupSize)
       throw new Error(`group must have ${this.expectedGroupSize} rucksacks`);

@@ -1,3 +1,5 @@
+import PriorityCalculator from './priority-calculator';
+
 export default class Rucksack {
   private readonly rucksackContents: string[];
   private readonly leftCompartment: string[];
@@ -24,21 +26,12 @@ export default class Rucksack {
     if (!sharedItemType)
       throw new Error('Compartments must share an item type');
 
-    return this.calculatePriority(sharedItemType);
+    return PriorityCalculator.calculatePriority(sharedItemType);
   }
 
   private findSharedItemType(): string | undefined {
     return this.leftCompartment.find((itemType: string) =>
       this.rightCompartment.includes(itemType)
     );
-  }
-
-  private calculatePriority(itemType: string): number {
-    const asciiUppercaseOffset = 38;
-    const asciiLowercaseOffset = 96;
-
-    return itemType.toUpperCase() === itemType
-      ? itemType.charCodeAt(0) - asciiUppercaseOffset
-      : itemType.charCodeAt(0) - asciiLowercaseOffset;
   }
 }

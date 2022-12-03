@@ -22,14 +22,14 @@ export default class FileProcessor {
 
   private static rucksackGroupReducer(
     acc: RucksackGroup[],
-    rucksack: Rucksack,
-    currentIndex: number
+    rucksack: Rucksack
   ): RucksackGroup[] {
-    if (currentIndex % 3 === 0) {
-      return [...acc, new RucksackGroup()];
+    const lastIndex = acc.length - 1;
+    if (acc.length === 0 || acc[lastIndex].length === 3) {
+      return [...acc, new RucksackGroup([rucksack])];
     }
 
-    acc[acc.length - 1].appendRucksack(rucksack);
+    acc[lastIndex].appendRucksack(rucksack);
     return acc;
   }
 }
