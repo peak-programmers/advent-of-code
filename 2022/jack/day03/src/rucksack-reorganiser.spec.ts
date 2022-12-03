@@ -1,4 +1,5 @@
 import Rucksack from './rucksack';
+import RucksackGroup from './rucksack-group';
 import RucksackReorganiser from './rucksack-reorganiser';
 
 describe('RucksackReorganiser()', () => {
@@ -30,4 +31,32 @@ describe('RucksackReorganiser()', () => {
 
     expect(RucksackReorganiser.calculateSharedPriorityTotal(input)).toBe(157);
   });
+
+  it.each([
+    {
+      input: [
+        new RucksackGroup([
+          new Rucksack('vJrwpWtwJgWrhcsFMMfFFhFp'),
+          new Rucksack('jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL'),
+          new Rucksack('PmmdzqPrVvPwwTWBwg'),
+        ]),
+      ],
+      expected: 18,
+    },
+    // {
+    //   input: [
+    //     new Rucksack('wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn'),
+    //     new Rucksack('ttgJtRGJQctTZtZT'),
+    //     new Rucksack('CrZsJsPPZsGzwwsLwLmpwMDw'),
+    //   ],
+    //   expected: 52,
+    // },
+  ])(
+    `should return the priority $expected of the item type shared between a group of rucksacks`,
+    ({ input, expected }) => {
+      expect(RucksackReorganiser.calculateGroupSharedPriorityTotal(input)).toBe(
+        expected
+      );
+    }
+  );
 });
