@@ -2,22 +2,22 @@ import * as fs from 'fs';
 
 export default class FileProcessor {
   public static processInputIntoInventories(inputPath: string): number[][] {
-    const data = fs.readFileSync(inputPath).toString().split('\n');
+    return fs
+      .readFileSync(inputPath)
+      .toString()
+      .split('\n')
+      .reduce(this.rawInventoryReducer, [[]]);
+  }
 
-    const inventories: number[][] = [];
-    let inventory: number[] = [];
-    data.forEach((line) => {
-      if (line === '') {
-        inventories.push(inventory);
-        inventory = [];
-        return;
-      }
+  private static rawInventoryReducer(
+    acc: number[][],
+    element: string
+  ): number[][] {
+    if (element === '') {
+      return [...acc, []];
+    }
 
-      inventory.push(parseInt(line));
-    });
-
-    inventories.push(inventory);
-
-    return inventories;
+    acc[acc.length - 1].push(parseInt(element));
+    return acc;
   }
 }
