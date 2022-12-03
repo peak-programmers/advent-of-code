@@ -1,11 +1,18 @@
 export default class Rucksack {
+  private readonly rucksackContents: string;
   private readonly leftCompartment: string[];
   private readonly rightCompartment: string[];
 
   constructor(rucksackContents: string) {
+    this.rucksackContents = rucksackContents;
+
     const midIndex = Math.floor(rucksackContents.length / 2);
     this.leftCompartment = rucksackContents.slice(0, midIndex + 1).split('');
     this.rightCompartment = rucksackContents.slice(midIndex + 1).split('');
+  }
+
+  get contents() {
+    return this.rucksackContents;
   }
 
   public calculateSharedPriority(): number {

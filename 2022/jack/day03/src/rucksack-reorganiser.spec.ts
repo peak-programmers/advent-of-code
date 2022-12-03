@@ -10,7 +10,7 @@ describe('RucksackReorganiser()', () => {
     { input: [new Rucksack('ttgJtRGJQctTZtZT')], expected: 20 },
     { input: [new Rucksack('CrZsJsPPZsGzwwsLwLmpwMDw')], expected: 19 },
   ])(
-    'should return the priority $expected of the item type shared between two rucksack compartments',
+    `should return the priority $expected of the item type shared between two rucksack compartments`,
     ({ input, expected }) => {
       expect(RucksackReorganiser.calculateSharedPriorityTotal(input)).toBe(
         expected
