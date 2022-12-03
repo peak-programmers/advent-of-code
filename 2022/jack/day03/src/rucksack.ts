@@ -7,8 +7,8 @@ export default class Rucksack {
     this.rucksackContents = rucksackContents;
 
     const midIndex = Math.floor(rucksackContents.length / 2);
-    this.leftCompartment = rucksackContents.slice(0, midIndex + 1).split('');
-    this.rightCompartment = rucksackContents.slice(midIndex + 1).split('');
+    this.leftCompartment = rucksackContents.slice(0, midIndex).split('');
+    this.rightCompartment = rucksackContents.slice(midIndex).split('');
   }
 
   get contents() {
