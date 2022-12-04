@@ -58,11 +58,44 @@ describe('CampCleanupOrganiser()', () => {
       expected: 0,
     },
   ])(
-    `should return the priority $expected of the item type shared between two rucksack compartments`,
+    `should return the return the count of a pair that have completely duplicated sections`,
     ({ input, expected }) => {
       expect(CampCleanupOrganiser.calculateTotalSectionDuplication(input)).toBe(
         expected
       );
     }
   );
+
+  it('should return the return the count of multiple pairs that have completely duplicated sections', () => {
+    const input = [
+      new AssignmentPair(
+        { firstSection: 2, lastSection: 4 },
+        { firstSection: 6, lastSection: 8 }
+      ),
+      new AssignmentPair(
+        { firstSection: 2, lastSection: 3 },
+        { firstSection: 5, lastSection: 7 }
+      ),
+      new AssignmentPair(
+        { firstSection: 5, lastSection: 7 },
+        { firstSection: 7, lastSection: 9 }
+      ),
+      new AssignmentPair(
+        { firstSection: 2, lastSection: 8 },
+        { firstSection: 3, lastSection: 7 }
+      ),
+      new AssignmentPair(
+        { firstSection: 6, lastSection: 6 },
+        { firstSection: 4, lastSection: 6 }
+      ),
+      new AssignmentPair(
+        { firstSection: 2, lastSection: 6 },
+        { firstSection: 4, lastSection: 8 }
+      ),
+    ];
+
+    expect(CampCleanupOrganiser.calculateTotalSectionDuplication(input)).toBe(
+      2
+    );
+  });
 });
