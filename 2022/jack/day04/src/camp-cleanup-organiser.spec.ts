@@ -1,58 +1,59 @@
+import AssignmentPair from './assignment-pair';
 import CampCleanupOrganiser from './camp-cleaner-organiser';
 
 describe('CampCleanupOrganiser()', () => {
   it.each([
     {
       input: [
-        {
-          a: [2, 3, 4],
-          b: [6, 7, 8],
-        },
+        new AssignmentPair(
+          { firstSection: 2, lastSection: 4 },
+          { firstSection: 6, lastSection: 8 }
+        ),
       ],
       expected: 0,
     },
     {
       input: [
-        {
-          a: [2, 3],
-          b: [4, 5],
-        },
+        new AssignmentPair(
+          { firstSection: 2, lastSection: 3 },
+          { firstSection: 5, lastSection: 7 }
+        ),
       ],
       expected: 0,
     },
     {
       input: [
-        {
-          a: [5, 6, 7],
-          b: [7, 8, 9],
-        },
+        new AssignmentPair(
+          { firstSection: 5, lastSection: 7 },
+          { firstSection: 7, lastSection: 9 }
+        ),
       ],
       expected: 0,
     },
     {
       input: [
-        {
-          a: [2, 3, 4, 5, 6, 7, 8],
-          b: [3, 4, 5, 6, 7],
-        },
+        new AssignmentPair(
+          { firstSection: 2, lastSection: 8 },
+          { firstSection: 3, lastSection: 7 }
+        ),
       ],
       expected: 1,
     },
     {
       input: [
-        {
-          a: [6],
-          b: [4, 5, 6],
-        },
+        new AssignmentPair(
+          { firstSection: 6, lastSection: 6 },
+          { firstSection: 4, lastSection: 6 }
+        ),
       ],
       expected: 1,
     },
     {
       input: [
-        {
-          a: [2, 3, 4, 5, 6],
-          b: [4, 5, 6, 7, 8],
-        },
+        new AssignmentPair(
+          { firstSection: 2, lastSection: 6 },
+          { firstSection: 4, lastSection: 8 }
+        ),
       ],
       expected: 0,
     },
