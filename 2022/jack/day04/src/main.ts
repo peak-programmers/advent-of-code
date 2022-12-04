@@ -6,6 +6,6 @@ const assignmentPairs: AssignmentPair[] =
   FileProcessor.processInputIntoAssignmentPairs('src/input.txt');
 
 const part1Result: number =
-  CampCleanupOrganiser.calculateTotalSectionDuplication(assignmentPairs);
+  CampCleanupOrganiser.calculateTotalFullSectionDuplication(assignmentPairs);
 
 console.log('Part 1 result: ', part1Result);

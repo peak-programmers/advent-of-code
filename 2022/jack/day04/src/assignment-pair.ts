@@ -42,10 +42,23 @@ export default class AssignmentPair {
     return assignment.lastSection - assignment.firstSection;
   }
 
-  public incrementIfSectionDuplicated(): number {
+  public incrementIfSectionFullyDuplicated(): number {
     return this.largestAssignment.firstSection <=
       this.smallestAssignment.firstSection &&
       this.largestAssignment.lastSection >= this.smallestAssignment.lastSection
+      ? 1
+      : 0;
+  }
+
+  public incrementIfSectionPartiallyDuplicated(): number {
+    return (this.largestAssignment.firstSection <=
+      this.smallestAssignment.firstSection &&
+      this.smallestAssignment.firstSection <=
+        this.largestAssignment.lastSection) ||
+      (this.largestAssignment.firstSection <=
+        this.smallestAssignment.lastSection &&
+        this.smallestAssignment.lastSection <=
+          this.largestAssignment.lastSection)
       ? 1
       : 0;
   }
