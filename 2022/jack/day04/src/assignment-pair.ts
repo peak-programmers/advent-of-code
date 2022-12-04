@@ -51,21 +51,19 @@ export default class AssignmentPair {
   }
 
   public incrementIfSectionPartiallyDuplicated(): number {
-    return this.valueInBounds(
+    return this.valueInAssignmentBounds(
       this.smallestAssignment.firstSection,
-      this.largestAssignment.firstSection,
-      this.largestAssignment.lastSection
+      this.largestAssignment
     ) ||
-      this.valueInBounds(
+      this.valueInAssignmentBounds(
         this.smallestAssignment.lastSection,
-        this.largestAssignment.firstSection,
-        this.largestAssignment.lastSection
+        this.largestAssignment
       )
       ? 1
       : 0;
   }
 
-  private valueInBounds(value: number, lowerBound: number, upperBound: number) {
-    return lowerBound <= value && value <= upperBound;
+  private valueInAssignmentBounds(value: number, assignment: Assigment) {
+    return assignment.firstSection <= value && value <= assignment.lastSection;
   }
 }
