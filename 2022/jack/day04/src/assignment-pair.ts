@@ -12,11 +12,18 @@ export default class AssignmentPair {
     this.assignmentB = assignmentB;
   }
 
-  public get largestAssignment() {
+  public get printRaw() {
+    const a = this.assignmentA;
+    const b = this.assignmentB;
+
+    return `${a.firstSection}-${a.lastSection},${b.firstSection}-${b.lastSection}`;
+  }
+
+  private get largestAssignment() {
     return this.calculateLargestAssignment();
   }
 
-  public get smallestAssignment() {
+  private get smallestAssignment() {
     return this.largestAssignment === this.assignmentA
       ? this.assignmentB
       : this.assignmentA;

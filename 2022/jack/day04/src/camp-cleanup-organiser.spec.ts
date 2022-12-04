@@ -60,9 +60,9 @@ describe('CampCleanupOrganiser()', () => {
   ])(
     `should return the priority $expected of the item type shared between two rucksack compartments`,
     ({ input, expected }) => {
-      expect(
-        CampCleanupOrganiser.calculateTotalFullWorkDuplication(input)
-      ).toBe(expected);
+      expect(CampCleanupOrganiser.calculateTotalSectionDuplication(input)).toBe(
+        expected
+      );
     }
   );
 });

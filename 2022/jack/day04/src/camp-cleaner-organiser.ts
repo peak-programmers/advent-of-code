@@ -1,7 +1,7 @@
 import AssignmentPair from './assignment-pair';
 
 export default class CampCleanupOrganiser {
-  public static calculateTotalFullWorkDuplication(
+  public static calculateTotalSectionDuplication(
     assignmentPairs: AssignmentPair[]
   ): number {
     return assignmentPairs.reduce(
