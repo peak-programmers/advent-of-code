@@ -1,10 +1,14 @@
-import MoveOrder from './movement-order';
+import MoveOrder from './types/move-order';
 
 export default class Cargo {
-  private readonly cargo: string[][];
+  public readonly cargo: string[][];
 
   constructor(cargo: string[][]) {
     this.cargo = [...cargo];
+  }
+
+  public getCargo() {
+    return this.cargo;
   }
 
   public getTopCrates() {
