@@ -1,9 +1,4 @@
 
-const fs = require('fs')
-
-
-
-
 const rucksackSorter = () => {
     let rawData
     try {
