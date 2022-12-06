@@ -10,7 +10,24 @@ describe('SignalProcessor()', () => {
   ])(
     'should index $expected of the first time a marker appears in packet $packet',
     ({ packet, expected }) => {
-      expect(SignalProcessor.findFirstPacketMarkerIndex(packet)).toBe(expected);
+      expect(SignalProcessor.findStartOfPacketMarkerIndex(packet)).toBe(
+        expected
+      );
+    }
+  );
+
+  it.each([
+    { packet: 'mjqjpqmgbljsphdztnvjfqwrcgsmlb', expected: 19 },
+    { packet: 'bvwbjplbgvbhsrlpgdmjqwftvncz', expected: 23 },
+    { packet: 'nppdvjthqldpwncqszvftbrmjlhg', expected: 23 },
+    { packet: 'nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg', expected: 29 },
+    { packet: 'zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw', expected: 26 },
+  ])(
+    'should index $expected of the first time a marker appears in packet $packet',
+    ({ packet, expected }) => {
+      expect(SignalProcessor.findStartOfMessageMarkerIndex(packet)).toBe(
+        expected
+      );
     }
   );
 });

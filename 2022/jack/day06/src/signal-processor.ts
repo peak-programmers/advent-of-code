@@ -1,7 +1,16 @@
 export default class SignalProcessor {
-  public static findFirstPacketMarkerIndex(packet: string): number {
-    const markerSequenceLength = 4;
+  public static findStartOfPacketMarkerIndex(packet: string): number {
+    return this.findMarker(packet, 4);
+  }
 
+  public static findStartOfMessageMarkerIndex(packet: string): number {
+    return this.findMarker(packet, 14);
+  }
+
+  private static findMarker(
+    packet: string,
+    markerSequenceLength: number
+  ): number {
     return (
       packet
         .split('')
