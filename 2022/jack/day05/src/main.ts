@@ -1,12 +1,15 @@
+import Cargo from './cargo';
+import CrateMover from './enums/crate-mover';
 import FileProcessor from './file-processor';
 
 const { cargo, moveOrders } =
   FileProcessor.processInputIntoCargoData('src/input.txt');
 
-cargo.executeMoveOrders(moveOrders);
+// const mover = CrateMover.NineThousand;
+const mover = CrateMover.NineThousandAndOne;
 
-const part1Result: string = cargo.getTopCrates();
-// const part2Result: number =
+cargo.executeMoveOrders(moveOrders, mover);
 
-console.log('Part 1 result: ', part1Result);
-// console.log('Part 2 result: ', part2Result);
+const result: string = cargo.getTopCrates();
+
+console.log('Part 1 result: ', result);

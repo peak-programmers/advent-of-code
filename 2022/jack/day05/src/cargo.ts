@@ -1,3 +1,4 @@
+import CrateMover from './enums/crate-mover';
 import MoveOrder from './types/move-order';
 
 export default class Cargo {
@@ -19,17 +20,20 @@ export default class Cargo {
     return `${acc}${stack[stack.length - 1] ?? ' '}`;
   }
 
-  public executeMoveOrders(moveOrders: MoveOrder[]): void {
+  public executeMoveOrders(moveOrders: MoveOrder[], mover: CrateMover): void {
     moveOrders.map((moveOrder) => {
-      this.executeMoveOrder(moveOrder);
+      this.executeMoveOrder(moveOrder, mover);
     });
   }
 
-  private executeMoveOrder(moveOrder: MoveOrder): void {
+  private executeMoveOrder(moveOrder: MoveOrder, mover: CrateMover): void {
     const inTransit: string[] = this.cargo[moveOrder.from].splice(
       -moveOrder.quantity,
       moveOrder.quantity
     );
-    this.cargo[moveOrder.to].push(...inTransit.reverse());
+    const transitType =
+      mover === CrateMover.NineThousand ? inTransit.reverse() : inTransit;
+
+    this.cargo[moveOrder.to].push(...transitType);
   }
 }

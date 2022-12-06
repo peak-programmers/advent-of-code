@@ -1,4 +1,5 @@
 import Cargo from './cargo';
+import CrateMover from './enums/crate-mover';
 import TestData from './test-data';
 
 describe('SupplyStackRearranger()', () => {
@@ -24,16 +25,22 @@ describe('SupplyStackRearranger()', () => {
       expected: 'CMZ',
     },
   ])(
-    `top crates should be $expected after input moves are executed`,
+    `top crates should be $expected after input moves are executed using CrateMover 9000`,
     ({ cargo, movementOrders, expected }) => {
-      cargo.executeMoveOrders(movementOrders);
+      cargo.executeMoveOrders(movementOrders, CrateMover.NineThousand);
       expect(cargo.getTopCrates()).toBe(expected);
     }
   );
 
-  it('should return the correct top crates after a sequence of moves are executed', () => {
+  it('should return the correct top crates after a sequence of moves are executed using CrateMover 9000', () => {
     const cargo = new Cargo([['Z', 'N'], ['M', 'C', 'D'], ['P']]);
-    cargo.executeMoveOrders(TestData.moveOrders);
+    cargo.executeMoveOrders(TestData.moveOrders, CrateMover.NineThousand);
     expect(cargo.getTopCrates()).toBe('CMZ');
+  });
+
+  it('should return the correct top crates after a sequence of moves are executed using CrateMover 9001', () => {
+    const cargo = new Cargo([['Z', 'N'], ['M', 'C', 'D'], ['P']]);
+    cargo.executeMoveOrders(TestData.moveOrders, CrateMover.NineThousandAndOne);
+    expect(cargo.getTopCrates()).toBe('MCD');
   });
 });
