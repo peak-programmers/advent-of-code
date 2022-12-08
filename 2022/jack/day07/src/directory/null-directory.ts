@@ -1,19 +1,35 @@
+import { File, Contents } from '../types';
 import IDirectory from './idirectory.interface';
 
 export default class NullDirectory implements IDirectory {
-  public getChildDirectories(): NullDirectory[] {
-    throw new Error('Null directory has no children');
+  public getChildDirectories(): IDirectory[] {
+    return [];
   }
 
   getName(): string {
     return '';
   }
 
-  getParent(): NullDirectory {
-    throw new Error('Null directory has no parent');
+  getParent(): IDirectory {
+    return {} as IDirectory;
   }
 
-  addChildDirectory(targetDirName: string): NullDirectory {
-    throw new Error('Null directory cannot have children');
+  addChildDirectory(targetDirName: string): IDirectory {
+    return {} as IDirectory;
+  }
+
+  addFile(file: File): File {
+    return {} as File;
+  }
+
+  cd(rawCdArg: string): IDirectory {
+    return {} as IDirectory;
+  }
+  ls(): Contents {
+    return {} as Contents;
+  }
+
+  toJson() {
+    return {};
   }
 }

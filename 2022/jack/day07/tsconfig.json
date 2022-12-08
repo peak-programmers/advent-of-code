@@ -8,6 +8,6 @@
     "outDir": "dist",
     "sourceMap": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "include": ["src/**/*", "**/*.spec.ts"],
+  "exclude": ["node_modules"]
 }

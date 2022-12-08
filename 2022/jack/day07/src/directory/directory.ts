@@ -1,17 +1,12 @@
 import CdArgFactory from '../command/cd-args/cd-arg-factory';
+import { Contents, File } from '../types';
 import IDirectory from './idirectory.interface';
-import NullDirectory from './null-directory';
-
-type File = {
-  name: string;
-  size: number;
-};
 
 export default class Directory implements IDirectory {
   private readonly name: string;
   private readonly parentDirectory: IDirectory;
   private readonly childDirectories: Directory[] = [];
-  private readonly childFiles: File[] = [];
+  private readonly files: File[] = [];
 
   constructor(name: string, parentDirectory: IDirectory) {
     this.name = name;
@@ -41,8 +36,35 @@ export default class Directory implements IDirectory {
     return childDir;
   }
 
+  public addFile(file: File): File {
+    this.files.push(file);
+
+    return file;
+  }
+
   public cd(rawCdArg: string): IDirectory {
     const cdArg = CdArgFactory.createCdArg(rawCdArg);
     return cdArg.execute(this);
+  }
+
+  public ls(): Contents {
+    return { directories: this.childDirectories, files: this.files };
+  }
+
+  public toJson(): any {
+    const dirJson = this.childDirectories
+      .map((dir) => dir.toJson())
+      .reduce(this.dirJsonReducer, {});
+    const files = this.files.reduce(this.fileJsonReducer, {});
+
+    return { [this.name]: { ...dirJson, ...files } };
+  }
+
+  private dirJsonReducer(acc: any, dir: any) {
+    return { ...acc, [Object.keys(dir)[0]]: Object.values(dir)[0] };
+  }
+
+  private fileJsonReducer(acc: any, file: File): any {
+    return { ...acc, [file.name]: file.size };
   }
 }
