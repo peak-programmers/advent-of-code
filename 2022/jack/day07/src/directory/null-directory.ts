@@ -32,4 +32,11 @@ export default class NullDirectory implements IDirectory {
   toJson() {
     return {};
   }
+
+  getDirectoriesBelowSizeCap(sizeCap: number): number[] {
+    throw new Error('Method not implemented.');
+  }
+  getDirectorySize(): number {
+    throw new Error('Method not implemented.');
+  }
 }

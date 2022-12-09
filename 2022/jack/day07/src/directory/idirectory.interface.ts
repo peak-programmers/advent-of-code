@@ -9,4 +9,6 @@ export default interface IDirectory {
   cd(rawCdArg: string): IDirectory;
   ls(): Contents;
   toJson(): any;
+  getDirectoriesBelowSizeCap(sizeCap: number): number[];
+  getDirectorySize(): number;
 }

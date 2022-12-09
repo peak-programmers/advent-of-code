@@ -67,4 +67,28 @@ export default class Directory implements IDirectory {
   private fileJsonReducer(acc: any, file: File): any {
     return { ...acc, [file.name]: file.size };
   }
+
+  public getDirectoriesBelowSizeCap(sizeCap: number): number[] {
+    const currentDirFileSize = this.getDirectorySize();
+    const sizes = currentDirFileSize <= sizeCap ? [currentDirFileSize] : [];
+
+    if (this.childDirectories.length === 0) return sizes;
+
+    this.childDirectories.map((dir) => {
+      sizes.push(...dir.getDirectoriesBelowSizeCap(sizeCap));
+    });
+
+    return sizes;
+  }
+
+  public getDirectorySize(): number {
+    const currentDirSize = this.files.reduce(
+      (acc: number, file: File) => acc + file.size,
+      0
+    );
+    return this.childDirectories.reduce(
+      (acc: number, directory: Directory) => acc + directory.getDirectorySize(),
+      currentDirSize
+    );
+  }
 }

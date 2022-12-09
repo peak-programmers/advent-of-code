@@ -157,4 +157,75 @@ describe('Directory', () => {
       });
     });
   });
+
+  describe('getDirectoriesBelowSizeCap()', () => {
+    it('should add the size of its own files if below size cap', () => {
+      const directory = new Directory('/', new NullDirectory());
+      directory.addFile({ name: 'abc', size: 1000 });
+      directory.addFile({ name: 'def', size: 2000 });
+
+      expect(directory.getDirectoriesBelowSizeCap(100000)).toStrictEqual([
+        3000,
+      ]);
+    });
+
+    it('should not add the size of its own files if above size cap', () => {
+      const directory = new Directory('/', new NullDirectory());
+      directory.addFile({ name: 'abc', size: 200000 });
+      directory.addFile({ name: 'def', size: 300 });
+
+      expect(directory.getDirectoriesBelowSizeCap(100000)).toStrictEqual([]);
+    });
+
+    it('should add the size of its own files and child files if above size cap example 1', () => {
+      const directory = new Directory('/', new NullDirectory());
+      directory.addFile({ name: 'abc', size: 1000 });
+      directory.addFile({ name: 'def', size: 2000 });
+      const x = directory.addChildDirectory('x');
+      x.addFile({ name: 'def', size: 3000 });
+      x.addFile({ name: 'ghi', size: 4000 });
+
+      expect(directory.getDirectoriesBelowSizeCap(100000)).toStrictEqual([
+        10000, 7000,
+      ]);
+    });
+
+    it('should add the size of its own files and child files if above size cap example 3', () => {
+      const directory = new Directory('/', new NullDirectory());
+      directory.addFile({ name: 'abc', size: 1000 });
+      directory.addFile({ name: 'def', size: 2000 });
+
+      const childOneDir = directory.addChildDirectory('childOneDir');
+      directory.addChildDirectory('subChildDir');
+      childOneDir.addFile({ name: 'def', size: 3000 });
+      childOneDir.addFile({ name: 'ghi', size: 4000 });
+
+      const subChildDir = childOneDir.addChildDirectory('subSubChildDir');
+      subChildDir.addFile({ name: 'abc', size: 100 });
+
+      expect(directory.getDirectoriesBelowSizeCap(100000)).toStrictEqual([
+        10100, 7100, 100, 0,
+      ]);
+    });
+
+    it('should add the size of its own files and child files if above size cap example 3', () => {
+      const directory = new Directory('/', new NullDirectory());
+      directory.addFile({ name: 'abc', size: 1000 });
+      directory.addFile({ name: 'def', size: 2000 });
+
+      const childOneDir = directory.addChildDirectory('childOneDir');
+      childOneDir.addFile({ name: 'def', size: 3000 });
+      childOneDir.addFile({ name: 'ghi', size: 4000 });
+      const childTwoDir = directory.addChildDirectory('childTwoDir');
+      childTwoDir.addFile({ name: 'testOne', size: 500 });
+      childTwoDir.addFile({ name: 'testTwo', size: 1000 });
+
+      const subChildDir = childOneDir.addChildDirectory('subChildDir');
+      subChildDir.addFile({ name: 'abc', size: 100 });
+
+      expect(directory.getDirectoriesBelowSizeCap(100000)).toStrictEqual([
+        11600, 7100, 100, 1500,
+      ]);
+    });
+  });
 });
