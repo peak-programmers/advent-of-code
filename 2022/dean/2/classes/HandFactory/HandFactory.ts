@@ -1,10 +1,11 @@
 import SimpleFactory from "@shared/SimpleFactory";
 import Hand from "../Hand";
+import StrategyCode from "../StrategyCode";
 
 export default class HandFactory implements SimpleFactory {
 
-    create(shapeCode: string) {
-        switch (shapeCode) {
+    create(code: StrategyCode) {
+        switch (code.symbol) {
             case 'A':
             case 'X':
                 return new Hand('rock');
@@ -15,7 +16,7 @@ export default class HandFactory implements SimpleFactory {
             case 'Z':
                 return new Hand('scissors');
             default:
-                throw Error(`Invalid input provided ${shapeCode}`);
+                throw Error(`Invalid input provided ${code.symbol}`);
         }
     }
 }
