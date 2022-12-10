@@ -10,6 +10,11 @@ enum Direction {
   Left = 'left',
 }
 
+type Subsection = {
+  direction: Direction;
+  values: number[];
+};
+
 export default class TreePatchAnalyser {
   public static calculateMaxScenicScore(treePatch: number[][]): number {
     const scenicScoreMap = this.buildScenicScoreMap(treePatch);
@@ -22,54 +27,39 @@ export default class TreePatchAnalyser {
   private static buildScenicScoreMap(treePatch: number[][]): number[][] {
     return treePatch.map((treeRow: number[], row: number) =>
       treeRow.map((tree: number, col: number) => {
-        const leftOfTree = treeRow.filter((_, index) => index < col).reverse();
-        const leftViewingDistance = this.calculateViewingDistance(
-          leftOfTree,
-          tree
-        );
+        const subsections = this.getSubsections(treePatch, treeRow, {
+          row,
+          col,
+        });
 
-        const rightOfTree = treeRow.filter((_, index) => index > col);
-        const rightViewingDistance = this.calculateViewingDistance(
-          rightOfTree,
-          tree
-        );
-
-        const treeCol = this.transposeRow(col, treePatch);
-
-        const aboveTree = treeCol.filter((_, index) => index < row).reverse();
-        const aboveViewingDistance = this.calculateViewingDistance(
-          aboveTree,
-          tree
-        );
-
-        const belowTree = treeCol.filter((_, index) => index > row);
-        const belowViewingDistance = this.calculateViewingDistance(
-          belowTree,
-          tree
-        );
-
-        return (
-          leftViewingDistance *
-          rightViewingDistance *
-          aboveViewingDistance *
-          belowViewingDistance
+        return subsections.reduce(
+          (acc: number, treeSubsection) =>
+            acc * this.calculateViewingDistance(treeSubsection, tree),
+          1
         );
       })
     );
   }
 
   private static calculateViewingDistance(
-    treeSubsection: number[],
+    treeSubsection: Subsection,
     tree: number
   ) {
-    if (treeSubsection.length === 0) return 0;
+    let values = treeSubsection.values;
 
-    const firstBlockingIndex = treeSubsection.findIndex(
+    if (values.length === 0) return 0;
+
+    if (
+      treeSubsection.direction === Direction.Left ||
+      treeSubsection.direction === Direction.Up
+    ) {
+      values = values.reverse();
+    }
+
+    const firstBlockingIndex = values.findIndex(
       (adjacentTree) => adjacentTree >= tree
     );
-    return firstBlockingIndex === -1
-      ? treeSubsection.length
-      : firstBlockingIndex + 1;
+    return firstBlockingIndex === -1 ? values.length : firstBlockingIndex + 1;
   }
 
   public static visibleTreesCount(treePatch: number[][]): number {
@@ -91,8 +81,8 @@ export default class TreePatchAnalyser {
     index: Index
   ): boolean {
     return this.getSubsections(treePatch, treeRow, index).reduce(
-      (acc: boolean, treeSubsection: number[]) =>
-        acc ? acc : this.visibleFromDirection(treeSubsection, tree),
+      (acc: boolean, treeSubsection: Subsection) =>
+        acc ? acc : this.visibleFromDirection(treeSubsection.values, tree),
       false
     );
   }
@@ -101,7 +91,7 @@ export default class TreePatchAnalyser {
     treePatch: number[][],
     treeRow: number[],
     index: Index
-  ): number[][] {
+  ): Subsection[] {
     const left = this.getDirectionSubsection(treeRow, index, Direction.Left);
     const right = this.getDirectionSubsection(treeRow, index, Direction.Right);
     const treeCol = this.transposeRow(index.col, treePatch);
@@ -115,8 +105,8 @@ export default class TreePatchAnalyser {
     treeSubsection: number[],
     gridIndex: Index,
     direction: Direction
-  ) {
-    return {
+  ): Subsection {
+    const directions = {
       [Direction.Up]: treeSubsection.filter(
         (_, index) => index < gridIndex.row
       ),
@@ -129,7 +119,8 @@ export default class TreePatchAnalyser {
       [Direction.Left]: treeSubsection.filter(
         (_, index) => index < gridIndex.col
       ),
-    }[direction];
+    };
+    return { direction, values: directions[direction] };
   }
 
   private static visibleFromDirection(
