@@ -1,24 +1,33 @@
-import InputLoader from "@shared/InputLoader";
-import Day from "@shared/Day";
-import config from '../../config';
+import InputLoader from "../InputLoader";
+import Elf from "../Elf";
 
-export default class Day1 extends Day {
+export default class Day1 {
+
+  #path: string;
 
   constructor(path: string) {
-    super(path);
+    this.#path = path;
   }
 
-  override solvePart1() {
-    const loader = new InputLoader(config.part1);
-    const elves = loader.load(this.inputPath);
+  get part1() {
+    return this.#solvePartOne();
+  }
+
+  get part2() {
+    return this.#solvePartTwo();
+  }
+
+  #solvePartOne() {
+    const loader = new InputLoader();
+    const elves: Elf[] = loader.load(this.#path);
     const orderedElves = elves.sort((elfA, elfB) => elfB.caloriesHeld - elfA.caloriesHeld);
     const elfWithMostCalories = orderedElves[0];
     return elfWithMostCalories.caloriesHeld;
   }
 
-  override solvePart2() {
-    const loader = new InputLoader(config.part2);
-    const elves = loader.load(this.inputPath);
+  #solvePartTwo() {
+    const loader = new InputLoader();
+    const elves: Elf[] = loader.load(this.#path);
     const orderedElves = elves.sort((elfA, elfB) => elfB.caloriesHeld - elfA.caloriesHeld);
     const topThreeMostCalories = orderedElves.slice(0, 3);
     const sumTopThreeCalories = topThreeMostCalories.reduce((acc, elf) => acc + elf.caloriesHeld, 0);
