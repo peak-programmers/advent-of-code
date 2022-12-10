@@ -17,8 +17,10 @@ type Subsection = {
 
 export default class TreePatchAnalyser {
   public static calculateMaxScenicScore(treePatch: number[][]): number {
-    const scenicScoreMap = this.buildScenicScoreMap(treePatch);
+    return this.findMaxScore(this.buildScenicScoreMap(treePatch));
+  }
 
+  private static findMaxScore(scenicScoreMap: number[][]): number {
     return scenicScoreMap.reduce((acc: number, scoreRow: number[]) => {
       return Math.max(acc, Math.max(...scoreRow));
     }, 0);
@@ -26,18 +28,22 @@ export default class TreePatchAnalyser {
 
   private static buildScenicScoreMap(treePatch: number[][]): number[][] {
     return treePatch.map((treeRow: number[], row: number) =>
-      treeRow.map((tree: number, col: number) => {
-        const subsections = this.getSubsections(treePatch, treeRow, {
-          row,
-          col,
-        });
+      treeRow.map((tree: number, col: number) =>
+        this.calculateScenicScore(treePatch, treeRow, tree, { row, col })
+      )
+    );
+  }
 
-        return subsections.reduce(
-          (acc: number, treeSubsection) =>
-            acc * this.calculateViewingDistance(treeSubsection, tree),
-          1
-        );
-      })
+  private static calculateScenicScore(
+    treePatch: number[][],
+    treeRow: number[],
+    tree: number,
+    index: Index
+  ) {
+    return this.getSubsections(treePatch, treeRow, index).reduce(
+      (acc: number, treeSubsection) =>
+        acc * this.calculateViewingDistance(treeSubsection, tree),
+      1
     );
   }
 
@@ -48,14 +54,23 @@ export default class TreePatchAnalyser {
     let values = treeSubsection.values;
 
     if (values.length === 0) return 0;
+    values = this.reverseIfLeftOrUp(treeSubsection);
 
+    return this.returnBlockerOrLength(values, tree);
+  }
+
+  private static reverseIfLeftOrUp(subsection: Subsection): number[] {
     if (
-      treeSubsection.direction === Direction.Left ||
-      treeSubsection.direction === Direction.Up
+      subsection.direction === Direction.Left ||
+      subsection.direction === Direction.Up
     ) {
-      values = values.reverse();
+      return subsection.values.reverse();
     }
 
+    return subsection.values;
+  }
+
+  private static returnBlockerOrLength(values: number[], tree: number) {
     const firstBlockingIndex = values.findIndex(
       (adjacentTree) => adjacentTree >= tree
     );
