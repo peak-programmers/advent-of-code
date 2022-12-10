@@ -1,7 +1,14 @@
-type GridIndex = {
+type Index = {
   row: number;
   col: number;
 };
+
+enum Direction {
+  Up = 'up',
+  Right = 'right',
+  Down = 'down',
+  Left = 'left',
+}
 
 export default class TreePatchAnalyser {
   public static calculateMaxScenicScore(treePatch: number[][]): number {
@@ -81,42 +88,55 @@ export default class TreePatchAnalyser {
     treePatch: number[][],
     treeRow: number[],
     tree: number,
-    gridIndex: GridIndex
+    index: Index
   ): boolean {
-    const visibleLeft = this.visibleFromDirection(
-      treeRow,
-      tree,
-      (index) => index < gridIndex.col
+    return this.getSubsections(treePatch, treeRow, index).reduce(
+      (acc: boolean, treeSubsection: number[]) =>
+        acc ? acc : this.visibleFromDirection(treeSubsection, tree),
+      false
     );
-    const visibleRight = this.visibleFromDirection(
-      treeRow,
-      tree,
-      (index) => index > gridIndex.col
-    );
+  }
 
-    const treeCol = this.transposeRow(gridIndex.col, treePatch);
-    const visibleAbove = this.visibleFromDirection(
-      treeCol,
-      tree,
-      (index) => index < gridIndex.row
-    );
-    const visibleBelow = this.visibleFromDirection(
-      treeCol,
-      tree,
-      (index) => index > gridIndex.row
-    );
+  private static getSubsections(
+    treePatch: number[][],
+    treeRow: number[],
+    index: Index
+  ): number[][] {
+    const left = this.getDirectionSubsection(treeRow, index, Direction.Left);
+    const right = this.getDirectionSubsection(treeRow, index, Direction.Right);
+    const treeCol = this.transposeRow(index.col, treePatch);
+    const up = this.getDirectionSubsection(treeCol, index, Direction.Up);
+    const down = this.getDirectionSubsection(treeCol, index, Direction.Down);
 
-    return visibleLeft || visibleRight || visibleAbove || visibleBelow;
+    return [up, right, down, left];
+  }
+
+  private static getDirectionSubsection(
+    treeSubsection: number[],
+    gridIndex: Index,
+    direction: Direction
+  ) {
+    return {
+      [Direction.Up]: treeSubsection.filter(
+        (_, index) => index < gridIndex.row
+      ),
+      [Direction.Right]: treeSubsection.filter(
+        (_, index) => index > gridIndex.col
+      ),
+      [Direction.Down]: treeSubsection.filter(
+        (_, index) => index > gridIndex.row
+      ),
+      [Direction.Left]: treeSubsection.filter(
+        (_, index) => index < gridIndex.col
+      ),
+    }[direction];
   }
 
   private static visibleFromDirection(
     treeSubsection: number[],
-    tree: number,
-    treeSubsectionPredicate: (index: number) => boolean
+    tree: number
   ): boolean {
-    return treeSubsection
-      .filter((_, index) => treeSubsectionPredicate(index))
-      .every((adjacentTree) => tree > adjacentTree);
+    return treeSubsection.every((adjacentTree) => tree > adjacentTree);
   }
 
   private static transposeRow(
