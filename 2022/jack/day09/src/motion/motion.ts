@@ -14,18 +14,18 @@ export default class Motion {
     const headVisitedIndexes = this.calculateVisitedHeadIndexes(knots[0]);
 
     let currentKnotIndex = 1;
-    const allKnotsVisitedPositions = this.recursivelyChartKnots(
+    const allKnotsVisitedIndexes = this.recursivelyChartKnots(
       [headVisitedIndexes],
       knots,
       currentKnotIndex
     );
 
     return {
-      knotPositions: allKnotsVisitedPositions.map(
+      knotPositions: allKnotsVisitedIndexes.map(
         (visitedPositions) => visitedPositions[visitedPositions.length - 1]
       ),
       tailVisitedPositions:
-        allKnotsVisitedPositions[allKnotsVisitedPositions.length - 1],
+        allKnotsVisitedIndexes[allKnotsVisitedIndexes.length - 1],
     };
   }
 
@@ -55,38 +55,62 @@ export default class Motion {
   }
 
   private recursivelyChartKnots(
-    allKnotsVisitedPositions: GridIndex[][],
+    allKnotsVisitedIndexes: GridIndex[][],
     knots: GridIndex[],
     currentKnotIndex: number
   ) {
-    const prevKnotPositions =
-      allKnotsVisitedPositions[allKnotsVisitedPositions.length - 1];
+    allKnotsVisitedIndexes.push(
+      this.addNextKnotVisitedIndexes(
+        allKnotsVisitedIndexes,
+        knots,
+        currentKnotIndex
+      )
+    );
 
-    let currentKnotPosition = {
-      ...knots[currentKnotIndex],
-    };
-    const currentKnotVisitedPositions = prevKnotPositions.map((prevKnot) => {
-      const tailMoveDirection = this.calculateTailMoveDirection(
-        prevKnot,
-        currentKnotPosition
-      );
-      currentKnotPosition = this.calculateNextTailPosition(
-        tailMoveDirection,
-        currentKnotPosition
-      );
-      return currentKnotPosition;
-    });
-
-    allKnotsVisitedPositions.push(currentKnotVisitedPositions);
-
-    if (allKnotsVisitedPositions.length < knots.length)
+    if (allKnotsVisitedIndexes.length < knots.length)
       this.recursivelyChartKnots(
-        allKnotsVisitedPositions,
+        allKnotsVisitedIndexes,
         knots,
         currentKnotIndex + 1
       );
 
-    return allKnotsVisitedPositions;
+    return allKnotsVisitedIndexes;
+  }
+
+  private addNextKnotVisitedIndexes(
+    allKnotsVisitedIndexes: GridIndex[][],
+    knots: GridIndex[],
+    currentKnotIndex: number
+  ) {
+    const prevKnotPositions =
+      allKnotsVisitedIndexes[allKnotsVisitedIndexes.length - 1];
+    return this.calculateNextKnotVisitedIndexes(
+      knots,
+      currentKnotIndex,
+      prevKnotPositions
+    );
+  }
+
+  private calculateNextKnotVisitedIndexes(
+    knots: GridIndex[],
+    currentKnotIndex: number,
+    prevKnotPositions: GridIndex[]
+  ): GridIndex[] {
+    let currentKnot = {
+      ...knots[currentKnotIndex],
+    };
+    return prevKnotPositions.map((prevKnot) => {
+      currentKnot = this.calculateVisitedIndex(prevKnot, currentKnot);
+      return this.calculateVisitedIndex(prevKnot, currentKnot);
+    });
+  }
+
+  private calculateVisitedIndex(prevKnot: GridIndex, currentKnot: GridIndex) {
+    const tailMoveDirection = this.calculateTailMoveDirection(
+      prevKnot,
+      currentKnot
+    );
+    return this.calculateNextTailPosition(tailMoveDirection, currentKnot);
   }
 
   private calculateTailMoveDirection(
