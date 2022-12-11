@@ -19,43 +19,10 @@ export default class Motion {
         headIndex,
         currentTailPosition
       );
-
-      currentTailPosition = {
-        [TailMoveDirection.None]: currentTailPosition,
-        [TailMoveDirection.UpLeft]: {
-          row: currentTailPosition.row + 1,
-          col: currentTailPosition.col - 1,
-        },
-        [TailMoveDirection.Up]: {
-          row: currentTailPosition.row + 1,
-          col: currentTailPosition.col,
-        },
-        [TailMoveDirection.UpRight]: {
-          row: currentTailPosition.row + 1,
-          col: currentTailPosition.col + 1,
-        },
-        [TailMoveDirection.Right]: {
-          row: currentTailPosition.row,
-          col: currentTailPosition.col + 1,
-        },
-        [TailMoveDirection.DownRight]: {
-          row: currentTailPosition.row - 1,
-          col: currentTailPosition.col + 1,
-        },
-        [TailMoveDirection.Down]: {
-          row: currentTailPosition.row - 1,
-          col: currentTailPosition.col,
-        },
-        [TailMoveDirection.DownLeft]: {
-          row: currentTailPosition.row - 1,
-          col: currentTailPosition.col - 1,
-        },
-        [TailMoveDirection.Left]: {
-          row: currentTailPosition.row,
-          col: currentTailPosition.col - 1,
-        },
-      }[tailMoveDirection];
-
+      currentTailPosition = this.calculateNextTailPosition(
+        tailMoveDirection,
+        currentTailPosition
+      );
       return currentTailPosition;
     });
 
@@ -115,5 +82,46 @@ export default class Motion {
         ['0,-2']: TailMoveDirection.Left,
       }[rowColDiffKey] ?? TailMoveDirection.None
     );
+  }
+
+  private calculateNextTailPosition(
+    tailMoveDirection: TailMoveDirection,
+    currentTailPosition: GridIndex
+  ): GridIndex {
+    return {
+      [TailMoveDirection.None]: currentTailPosition,
+      [TailMoveDirection.UpLeft]: {
+        row: currentTailPosition.row + 1,
+        col: currentTailPosition.col - 1,
+      },
+      [TailMoveDirection.Up]: {
+        row: currentTailPosition.row + 1,
+        col: currentTailPosition.col,
+      },
+      [TailMoveDirection.UpRight]: {
+        row: currentTailPosition.row + 1,
+        col: currentTailPosition.col + 1,
+      },
+      [TailMoveDirection.Right]: {
+        row: currentTailPosition.row,
+        col: currentTailPosition.col + 1,
+      },
+      [TailMoveDirection.DownRight]: {
+        row: currentTailPosition.row - 1,
+        col: currentTailPosition.col + 1,
+      },
+      [TailMoveDirection.Down]: {
+        row: currentTailPosition.row - 1,
+        col: currentTailPosition.col,
+      },
+      [TailMoveDirection.DownLeft]: {
+        row: currentTailPosition.row - 1,
+        col: currentTailPosition.col - 1,
+      },
+      [TailMoveDirection.Left]: {
+        row: currentTailPosition.row,
+        col: currentTailPosition.col - 1,
+      },
+    }[tailMoveDirection];
   }
 }
