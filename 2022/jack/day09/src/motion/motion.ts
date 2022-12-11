@@ -13,25 +13,19 @@ export default class Motion {
   public execute(knots: GridIndex[]): MotionData {
     const headVisitedIndexes = this.calculateVisitedHeadIndexes(knots[0]);
 
-    let currentTailPosition = { ...knots[knots.length - 1] };
-    const tailVisitedPositions = headVisitedIndexes.map((headIndex) => {
-      const tailMoveDirection = this.calculateTailMoveDirection(
-        headIndex,
-        currentTailPosition
-      );
-      currentTailPosition = this.calculateNextTailPosition(
-        tailMoveDirection,
-        currentTailPosition
-      );
-      return currentTailPosition;
-    });
+    let currentKnotIndex = 1;
+    const allKnotsVisitedPositions = this.recursivelyChartKnots(
+      [headVisitedIndexes],
+      knots,
+      currentKnotIndex
+    );
 
     return {
-      knotPositions: [
-        headVisitedIndexes[headVisitedIndexes.length - 1],
-        currentTailPosition,
-      ],
-      tailVisitedPositions,
+      knotPositions: allKnotsVisitedPositions.map(
+        (visitedPositions) => visitedPositions[visitedPositions.length - 1]
+      ),
+      tailVisitedPositions:
+        allKnotsVisitedPositions[allKnotsVisitedPositions.length - 1],
     };
   }
 
@@ -60,6 +54,41 @@ export default class Motion {
     });
   }
 
+  private recursivelyChartKnots(
+    allKnotsVisitedPositions: GridIndex[][],
+    knots: GridIndex[],
+    currentKnotIndex: number
+  ) {
+    const prevKnotPositions =
+      allKnotsVisitedPositions[allKnotsVisitedPositions.length - 1];
+
+    let currentKnotPosition = {
+      ...knots[currentKnotIndex],
+    };
+    const currentKnotVisitedPositions = prevKnotPositions.map((prevKnot) => {
+      const tailMoveDirection = this.calculateTailMoveDirection(
+        prevKnot,
+        currentKnotPosition
+      );
+      currentKnotPosition = this.calculateNextTailPosition(
+        tailMoveDirection,
+        currentKnotPosition
+      );
+      return currentKnotPosition;
+    });
+
+    allKnotsVisitedPositions.push(currentKnotVisitedPositions);
+
+    if (allKnotsVisitedPositions.length < knots.length)
+      this.recursivelyChartKnots(
+        allKnotsVisitedPositions,
+        knots,
+        currentKnotIndex + 1
+      );
+
+    return allKnotsVisitedPositions;
+  }
+
   private calculateTailMoveDirection(
     headIndex: GridIndex,
     currentTailIndex: GridIndex
@@ -71,15 +100,19 @@ export default class Motion {
     return (
       {
         ['1,-2']: TailMoveDirection.UpLeft,
+        ['2,-2']: TailMoveDirection.UpLeft,
         ['2,-1']: TailMoveDirection.UpLeft,
         ['2,0']: TailMoveDirection.Up,
         ['2,1']: TailMoveDirection.UpRight,
+        ['2,2']: TailMoveDirection.UpRight,
         ['1,2']: TailMoveDirection.UpRight,
         ['0,2']: TailMoveDirection.Right,
         ['-1,2']: TailMoveDirection.DownRight,
+        ['-2,2']: TailMoveDirection.DownRight,
         ['-2,1']: TailMoveDirection.DownRight,
         ['-2,0']: TailMoveDirection.Down,
         ['-2,-1']: TailMoveDirection.DownLeft,
+        ['-2,-2']: TailMoveDirection.UpLeft,
         ['-1,-2']: TailMoveDirection.DownLeft,
         ['0,-2']: TailMoveDirection.Left,
       }[rowColDiffKey] ?? TailMoveDirection.None

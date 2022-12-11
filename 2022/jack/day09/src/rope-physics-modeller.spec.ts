@@ -27,7 +27,7 @@ describe('RopePhysicsModeller', () => {
       new Motion(Direction.Right, 17),
       new Motion(Direction.Down, 10),
       new Motion(Direction.Left, 25),
-      new Motion(Direction.Right, 20),
+      new Motion(Direction.Up, 20),
     ];
 
     expect(RopePhysicsModeller.calculateVisitedPositions(motions, 10)).toBe(36);
