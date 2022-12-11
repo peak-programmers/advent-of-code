@@ -1,4 +1,4 @@
-import { Direction, TailMoveDirection } from '../enum';
+import { Direction, TailMoveDirection as KnotMoveDirection } from '../enum';
 import { GridIndex, MotionData } from '../types';
 
 export default class Motion {
@@ -106,78 +106,78 @@ export default class Motion {
   }
 
   private calculateVisitedIndex(prevKnot: GridIndex, currentKnot: GridIndex) {
-    const tailMoveDirection = this.calculateTailMoveDirection(
+    const tailMoveDirection = this.calculateKnotMoveDirection(
       prevKnot,
       currentKnot
     );
     return this.calculateNextTailPosition(tailMoveDirection, currentKnot);
   }
 
-  private calculateTailMoveDirection(
-    headIndex: GridIndex,
-    currentTailIndex: GridIndex
-  ): TailMoveDirection {
-    const rowColDiffKey = `${headIndex.row - currentTailIndex.row},${
-      headIndex.col - currentTailIndex.col
+  private calculateKnotMoveDirection(
+    prevKnotIndex: GridIndex,
+    currentKnotIndex: GridIndex
+  ): KnotMoveDirection {
+    const rowColDiffKey = `${prevKnotIndex.row - currentKnotIndex.row},${
+      prevKnotIndex.col - currentKnotIndex.col
     }`;
 
     return (
       {
-        ['1,-2']: TailMoveDirection.UpLeft,
-        ['2,-2']: TailMoveDirection.UpLeft,
-        ['2,-1']: TailMoveDirection.UpLeft,
-        ['2,0']: TailMoveDirection.Up,
-        ['2,1']: TailMoveDirection.UpRight,
-        ['2,2']: TailMoveDirection.UpRight,
-        ['1,2']: TailMoveDirection.UpRight,
-        ['0,2']: TailMoveDirection.Right,
-        ['-1,2']: TailMoveDirection.DownRight,
-        ['-2,2']: TailMoveDirection.DownRight,
-        ['-2,1']: TailMoveDirection.DownRight,
-        ['-2,0']: TailMoveDirection.Down,
-        ['-2,-1']: TailMoveDirection.DownLeft,
-        ['-2,-2']: TailMoveDirection.UpLeft,
-        ['-1,-2']: TailMoveDirection.DownLeft,
-        ['0,-2']: TailMoveDirection.Left,
-      }[rowColDiffKey] ?? TailMoveDirection.None
+        ['1,-2']: KnotMoveDirection.UpLeft,
+        ['2,-2']: KnotMoveDirection.UpLeft,
+        ['2,-1']: KnotMoveDirection.UpLeft,
+        ['2,0']: KnotMoveDirection.Up,
+        ['2,1']: KnotMoveDirection.UpRight,
+        ['2,2']: KnotMoveDirection.UpRight,
+        ['1,2']: KnotMoveDirection.UpRight,
+        ['0,2']: KnotMoveDirection.Right,
+        ['-1,2']: KnotMoveDirection.DownRight,
+        ['-2,2']: KnotMoveDirection.DownRight,
+        ['-2,1']: KnotMoveDirection.DownRight,
+        ['-2,0']: KnotMoveDirection.Down,
+        ['-2,-1']: KnotMoveDirection.DownLeft,
+        ['-2,-2']: KnotMoveDirection.DownLeft,
+        ['-1,-2']: KnotMoveDirection.DownLeft,
+        ['0,-2']: KnotMoveDirection.Left,
+      }[rowColDiffKey] ?? KnotMoveDirection.None
     );
   }
 
   private calculateNextTailPosition(
-    tailMoveDirection: TailMoveDirection,
+    tailMoveDirection: KnotMoveDirection,
     currentTailPosition: GridIndex
   ): GridIndex {
     return {
-      [TailMoveDirection.None]: currentTailPosition,
-      [TailMoveDirection.UpLeft]: {
+      [KnotMoveDirection.None]: currentTailPosition,
+      [KnotMoveDirection.UpLeft]: {
         row: currentTailPosition.row + 1,
         col: currentTailPosition.col - 1,
       },
-      [TailMoveDirection.Up]: {
+      [KnotMoveDirection.Up]: {
         row: currentTailPosition.row + 1,
         col: currentTailPosition.col,
       },
-      [TailMoveDirection.UpRight]: {
+      [KnotMoveDirection.UpRight]: {
         row: currentTailPosition.row + 1,
         col: currentTailPosition.col + 1,
       },
-      [TailMoveDirection.Right]: {
+      [KnotMoveDirection.Right]: {
         row: currentTailPosition.row,
         col: currentTailPosition.col + 1,
       },
-      [TailMoveDirection.DownRight]: {
+      [KnotMoveDirection.DownRight]: {
         row: currentTailPosition.row - 1,
         col: currentTailPosition.col + 1,
       },
-      [TailMoveDirection.Down]: {
+      [KnotMoveDirection.Down]: {
         row: currentTailPosition.row - 1,
         col: currentTailPosition.col,
       },
-      [TailMoveDirection.DownLeft]: {
+      [KnotMoveDirection.DownLeft]: {
         row: currentTailPosition.row - 1,
         col: currentTailPosition.col - 1,
       },
-      [TailMoveDirection.Left]: {
+      [KnotMoveDirection.Left]: {
         row: currentTailPosition.row,
         col: currentTailPosition.col - 1,
       },
