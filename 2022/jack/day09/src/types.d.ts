@@ -4,7 +4,6 @@ export type GridIndex = {
 };
 
 export type MotionData = {
-  headEndPosition: GridIndex;
-  tailEndPosition: GridIndex;
+  knotPositions: GridIndex[];
   tailVisitedPositions: GridIndex[];
 };

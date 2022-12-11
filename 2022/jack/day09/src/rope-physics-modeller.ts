@@ -2,15 +2,18 @@ import Motion from './motion/motion';
 import { GridIndex } from './types';
 
 export default class RopePhysicsModeller {
-  public static calculateVisitedPositions(motions: Motion[]): number {
+  public static calculateVisitedPositions(
+    motions: Motion[],
+    knotCount: number = 2
+  ): number {
     const tailVisitedPositions: GridIndex[] = [];
-    let headIndex: GridIndex = { row: 0, col: 0 };
-    let tailIndex: GridIndex = { row: 0, col: 0 };
+    let knots: GridIndex[] = [...new Array(knotCount)].map((value) => {
+      return { row: 0, col: 0 };
+    });
 
     motions.map((motion) => {
-      const movementData = motion.execute(headIndex, tailIndex);
-      headIndex = { ...movementData.headEndPosition };
-      tailIndex = { ...movementData.tailEndPosition };
+      const movementData = motion.execute(knots);
+      knots = [...movementData.knotPositions];
       tailVisitedPositions.push(...movementData.tailVisitedPositions);
     });
 

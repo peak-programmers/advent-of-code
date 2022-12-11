@@ -10,10 +10,10 @@ export default class Motion {
     this.distance = distance;
   }
 
-  public execute(headIndex: GridIndex, tailIndex: GridIndex): MotionData {
-    const headVisitedIndexes = this.calculateVisitedHeadIndexes(headIndex);
+  public execute(knots: GridIndex[]): MotionData {
+    const headVisitedIndexes = this.calculateVisitedHeadIndexes(knots[0]);
 
-    let currentTailPosition = { ...tailIndex };
+    let currentTailPosition = { ...knots[knots.length - 1] };
     const tailVisitedPositions = headVisitedIndexes.map((headIndex) => {
       const tailMoveDirection = this.calculateTailMoveDirection(
         headIndex,
@@ -27,8 +27,10 @@ export default class Motion {
     });
 
     return {
-      headEndPosition: headVisitedIndexes[headVisitedIndexes.length - 1],
-      tailEndPosition: currentTailPosition,
+      knotPositions: [
+        headVisitedIndexes[headVisitedIndexes.length - 1],
+        currentTailPosition,
+      ],
       tailVisitedPositions,
     };
   }
