@@ -26,14 +26,9 @@ export default class Addx implements IInstruction {
     aggregateOutput: InstructionOutput,
     interval: number
   ): number {
-    const { X, cycle, signalStrength } = aggregateOutput;
-    if (cycle + 1 === interval || cycle + 2 === interval) {
-      return signalStrength + X * interval;
-    }
-
-    return this.cycleCrossesInterval(cycle, interval)
-      ? signalStrength + X * interval
-      : signalStrength;
+    return this.cycleCrossesInterval(aggregateOutput.cycle, interval)
+      ? aggregateOutput.signalStrength + aggregateOutput.X * interval
+      : aggregateOutput.signalStrength;
   }
 
   private cycleCrossesInterval(cycle: number, interval: number): boolean {
