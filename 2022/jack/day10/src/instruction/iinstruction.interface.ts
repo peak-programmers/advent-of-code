@@ -1,10 +1,7 @@
 import { InstructionOutput } from '../types';
 
 interface IInstruction {
-  execute(
-    aggregateOutput: InstructionOutput,
-    cycleInterval: number
-  ): InstructionOutput;
+  execute(aggregateOutput: InstructionOutput): InstructionOutput;
 }
 
 export default IInstruction;

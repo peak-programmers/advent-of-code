@@ -6,22 +6,23 @@ export default class SignalStrengthAnalyser {
     instructions: IInstruction[],
     cycleIntervals: number[]
   ): number {
-    let aggregateOutput: InstructionOutput = {
+    const aggregateOutput: InstructionOutput = {
       X: 1,
       cycle: 0,
       signalStrength: 0,
+      cycleIntervals,
     };
 
-    instructions.forEach((instruction: IInstruction) => {
-      const output = instruction.execute(aggregateOutput, cycleIntervals[0]);
+    return instructions.reduce(
+      SignalStrengthAnalyser.instructionsReducer,
+      aggregateOutput
+    ).signalStrength;
+  }
 
-      if (output.signalStrength !== aggregateOutput.signalStrength) {
-        cycleIntervals.splice(0, 1);
-      }
-
-      aggregateOutput = { ...output };
-    });
-
-    return aggregateOutput.signalStrength;
+  private static instructionsReducer(
+    acc: InstructionOutput,
+    instruction: IInstruction
+  ) {
+    return instruction.execute(acc);
   }
 }
