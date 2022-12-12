@@ -4,7 +4,7 @@ interface IInstruction {
   execute(
     currentX: number,
     currentCycle: number,
-    cycleIntervals: number[]
+    cycleInterval: number
   ): InstructionOutput;
 }
 

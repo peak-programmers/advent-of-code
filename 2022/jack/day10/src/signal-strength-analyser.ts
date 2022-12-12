@@ -14,7 +14,7 @@ export default class SignalStrengthAnalyser {
       const output = instruction.execute(
         currentX,
         currentCycle,
-        cycleIntervals
+        cycleIntervals[0]
       );
       (currentX = output.X), (currentCycle = output.cycle);
 

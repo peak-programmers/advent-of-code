@@ -5,17 +5,26 @@ export default class Noop implements IInstruction {
   public execute(
     currentX: number,
     currentCycle: number,
-    cycleIntervals: number[]
+    cycleInterval: number
   ): InstructionOutput {
-    let signalStrength: undefined | number;
-    if (currentCycle + 1 === cycleIntervals[0]) {
-      signalStrength = currentX * cycleIntervals[0];
-    }
-
     return {
       X: currentX,
       cycle: currentCycle + 1,
-      signalStrength,
+      signalStrength: this.updateSignalStrengthIfInterval(
+        currentX,
+        currentCycle,
+        cycleInterval
+      ),
     };
+  }
+
+  private updateSignalStrengthIfInterval(
+    x: number,
+    cycle: number,
+    interval: number
+  ): undefined | number {
+    if (cycle + 1 === interval) {
+      return x * interval;
+    }
   }
 }

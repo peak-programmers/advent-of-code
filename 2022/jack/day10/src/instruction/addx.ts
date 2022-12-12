@@ -11,20 +11,26 @@ export default class Addx implements IInstruction {
   public execute(
     currentX: number,
     currentCycle: number,
-    cycleIntervals: number[]
+    nextCycleInterval: number
   ): InstructionOutput {
-    let signalStrength: undefined | number;
-    if (
-      currentCycle + 1 === cycleIntervals[0] ||
-      currentCycle + 2 === cycleIntervals[0]
-    ) {
-      signalStrength = currentX * cycleIntervals[0];
-    }
-
     return {
       X: currentX + this._x,
       cycle: currentCycle + 2,
-      signalStrength,
+      signalStrength: this.updateSignalStrengthIfInterval(
+        currentX,
+        currentCycle,
+        nextCycleInterval
+      ),
     };
+  }
+
+  private updateSignalStrengthIfInterval(
+    x: number,
+    cycle: number,
+    interval: number
+  ): undefined | number {
+    if (cycle + 1 === interval || cycle + 2 === interval) {
+      return x * interval;
+    }
   }
 }
