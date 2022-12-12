@@ -2,8 +2,7 @@ import { InstructionOutput } from '../types';
 
 interface IInstruction {
   execute(
-    currentX: number,
-    currentCycle: number,
+    aggregateOutput: InstructionOutput,
     cycleInterval: number
   ): InstructionOutput;
 }

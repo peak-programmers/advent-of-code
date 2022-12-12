@@ -5,27 +5,23 @@ export default class SignalStrengthAnalyser {
   static calculateSignalStrengthSum(
     instructions: IInstruction[],
     cycleIntervals: number[]
-  ): any {
-    let currentX = 1;
-    let currentCycle = 0;
-    let intervalSignalStrengths: number[] = [];
+  ): number {
+    let aggregateOutput: InstructionOutput = {
+      X: 1,
+      cycle: 0,
+      signalStrength: 0,
+    };
 
     instructions.forEach((instruction: IInstruction) => {
-      const output = instruction.execute(
-        currentX,
-        currentCycle,
-        cycleIntervals[0]
-      );
-      (currentX = output.X), (currentCycle = output.cycle);
+      const output = instruction.execute(aggregateOutput, cycleIntervals[0]);
 
-      if (output.signalStrength) {
-        intervalSignalStrengths.push(output.signalStrength);
+      if (output.signalStrength !== aggregateOutput.signalStrength) {
         cycleIntervals.splice(0, 1);
       }
+
+      aggregateOutput = { ...output };
     });
 
-    return intervalSignalStrengths.reduce(
-      (acc, signalStrength) => acc + signalStrength
-    );
+    return aggregateOutput.signalStrength;
   }
 }

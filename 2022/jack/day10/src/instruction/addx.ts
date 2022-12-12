@@ -9,28 +9,34 @@ export default class Addx implements IInstruction {
   }
 
   public execute(
-    currentX: number,
-    currentCycle: number,
+    aggregateOutput: InstructionOutput,
     nextCycleInterval: number
   ): InstructionOutput {
     return {
-      X: currentX + this._x,
-      cycle: currentCycle + 2,
+      X: aggregateOutput.X + this._x,
+      cycle: aggregateOutput.cycle + 2,
       signalStrength: this.updateSignalStrengthIfInterval(
-        currentX,
-        currentCycle,
+        aggregateOutput,
         nextCycleInterval
       ),
     };
   }
 
   private updateSignalStrengthIfInterval(
-    x: number,
-    cycle: number,
+    aggregateOutput: InstructionOutput,
     interval: number
-  ): undefined | number {
+  ): number {
+    const { X, cycle, signalStrength } = aggregateOutput;
     if (cycle + 1 === interval || cycle + 2 === interval) {
-      return x * interval;
+      return signalStrength + X * interval;
     }
+
+    return this.cycleCrossesInterval(cycle, interval)
+      ? signalStrength + X * interval
+      : signalStrength;
+  }
+
+  private cycleCrossesInterval(cycle: number, interval: number): boolean {
+    return cycle + 1 === interval || cycle + 2 === interval;
   }
 }

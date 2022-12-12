@@ -3,28 +3,29 @@ import IInstruction from './iinstruction.interface';
 
 export default class Noop implements IInstruction {
   public execute(
-    currentX: number,
-    currentCycle: number,
+    aggregateOutput: InstructionOutput,
     cycleInterval: number
   ): InstructionOutput {
     return {
-      X: currentX,
-      cycle: currentCycle + 1,
+      X: aggregateOutput.X,
+      cycle: aggregateOutput.cycle + 1,
       signalStrength: this.updateSignalStrengthIfInterval(
-        currentX,
-        currentCycle,
+        aggregateOutput,
         cycleInterval
       ),
     };
   }
 
   private updateSignalStrengthIfInterval(
-    x: number,
-    cycle: number,
+    aggregateOutput: InstructionOutput,
     interval: number
-  ): undefined | number {
-    if (cycle + 1 === interval) {
-      return x * interval;
-    }
+  ): number {
+    return this.cycleCrossesInterval(aggregateOutput.cycle, interval)
+      ? aggregateOutput.X * interval
+      : aggregateOutput.signalStrength;
+  }
+
+  private cycleCrossesInterval(cycle: number, interval: number): boolean {
+    return cycle + 1 === interval;
   }
 }
