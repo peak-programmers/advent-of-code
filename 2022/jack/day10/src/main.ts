@@ -1,12 +1,13 @@
 import FileProcessor from './file-processor';
-import SignalStrengthAnalyser from './signal-strength-analyser';
+import CathodRayTube from './cathod-ray-tube';
 
 const instructions =
   FileProcessor.processInputIntoInstructions('src/input.txt');
-const part1Result: number = SignalStrengthAnalyser.calculateSignalStrengthSum(
+const part1Result: number = CathodRayTube.calculateAggregatedOutput(
   instructions,
-  [20, 60, 100, 140, 180, 220]
-);
+  [20, 60, 100, 140, 180, 220],
+  { width: 40, height: 6 }
+).signalStrength;
 // const part2Result: number = RopePhysicsModeller.calculateVisitedPositions(
 //   motions,
 //   10

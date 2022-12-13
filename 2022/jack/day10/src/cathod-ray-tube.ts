@@ -1,22 +1,25 @@
 import { IInstruction } from './instruction';
-import { InstructionOutput } from './types';
+import { InstructionOutput, ScreenDims } from './types';
 
-export default class SignalStrengthAnalyser {
-  static calculateSignalStrengthSum(
+export default class CathodRayTube {
+  static calculateAggregatedOutput(
     instructions: IInstruction[],
-    cycleIntervals: number[]
-  ): number {
+    cycleIntervals: number[],
+    screenDims: ScreenDims
+  ): InstructionOutput {
     const aggregateOutput: InstructionOutput = {
       X: 1,
       cycle: 0,
       signalStrength: 0,
       cycleIntervals,
+      screenDims,
+      crtOutput: Array(screenDims.height).fill(''),
     };
 
     return instructions.reduce(
-      SignalStrengthAnalyser.instructionsReducer,
+      CathodRayTube.instructionsReducer,
       aggregateOutput
-    ).signalStrength;
+    );
   }
 
   private static instructionsReducer(

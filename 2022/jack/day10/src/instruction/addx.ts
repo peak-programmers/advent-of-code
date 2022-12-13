@@ -12,24 +12,27 @@ export default class Addx implements IInstruction {
     return {
       X: aggregateOutput.X + this._x,
       cycle: aggregateOutput.cycle + 2,
-      signalStrength:
-        this.updateSignalStrengthAndIntervalsIfInterval(aggregateOutput),
-      cycleIntervals: aggregateOutput.cycleIntervals,
+      screenDims: aggregateOutput.screenDims,
+      crtOutput: [],
+      ...this.updateSignalStrengthAndIntervalsIfInterval(aggregateOutput),
     };
   }
 
   private updateSignalStrengthAndIntervalsIfInterval(
     aggregateOutput: InstructionOutput
-  ): number {
+  ): Pick<InstructionOutput, 'cycleIntervals' | 'signalStrength'> {
     const { X, cycle, signalStrength, cycleIntervals } = aggregateOutput;
     const interval = cycleIntervals[0];
 
-    if (this.cycleCrossesInterval(cycle, interval)) {
-      cycleIntervals.splice(0, 1);
-      return signalStrength + X * interval;
-    }
-
-    return signalStrength;
+    return this.cycleCrossesInterval(cycle, interval)
+      ? {
+          signalStrength: signalStrength + X * interval,
+          cycleIntervals: cycleIntervals.slice(1),
+        }
+      : {
+          signalStrength,
+          cycleIntervals,
+        };
   }
 
   private cycleCrossesInterval(cycle: number, interval: number): boolean {
