@@ -1,4 +1,4 @@
-import { InstructionOutput } from '../types';
+import { InstructionOutput, ScreenDims } from '../types';
 import IInstruction from './iinstruction.interface';
 
 export default class Addx implements IInstruction {
@@ -13,9 +13,33 @@ export default class Addx implements IInstruction {
       X: aggregateOutput.X + this._x,
       cycle: aggregateOutput.cycle + 2,
       screenDims: aggregateOutput.screenDims,
-      crtOutput: [],
+      crtOutput: this.updateCrt(aggregateOutput),
       ...this.updateSignalStrengthAndIntervalsIfInterval(aggregateOutput),
     };
+  }
+
+  private updateCrt(aggregateOutput: InstructionOutput): string[] {
+    const { X, cycle, screenDims, crtOutput } = aggregateOutput;
+
+    const firstPixel = this.determinePixelLitOrDark(X, cycle);
+    const firstPixelCrtRow = this.calculateCrtRow(cycle, screenDims);
+
+    const secondPixel = this.determinePixelLitOrDark(X, cycle + 1);
+    const secondPixelCrtRow = this.calculateCrtRow(cycle + 1, screenDims);
+
+    const updatedCrt = [...crtOutput];
+    updatedCrt[firstPixelCrtRow] += firstPixel;
+    updatedCrt[secondPixelCrtRow] += secondPixel;
+
+    return updatedCrt;
+  }
+
+  private determinePixelLitOrDark(X: number, cycle: number) {
+    return [X - 1, X, X + 1].includes(cycle % 40) ? '#' : '.';
+  }
+
+  private calculateCrtRow(cycle: number, screenDims: ScreenDims) {
+    return Math.floor(cycle / screenDims.width) % screenDims.height;
   }
 
   private updateSignalStrengthAndIntervalsIfInterval(

@@ -7,9 +7,20 @@ export default class Noop implements IInstruction {
       X: aggregateOutput.X,
       cycle: aggregateOutput.cycle + 1,
       screenDims: aggregateOutput.screenDims,
-      crtOutput: [],
+      crtOutput: this.updateCrt(aggregateOutput),
       ...this.updateSignalStrengthAndIntervalsIfInterval(aggregateOutput),
     };
+  }
+
+  private updateCrt(aggregateOutput: InstructionOutput): string[] {
+    const { X, cycle, screenDims, crtOutput } = aggregateOutput;
+    const crtRow = Math.floor(cycle / screenDims.width) % screenDims.height;
+    const spriteIndexes = [X - 1, X, X + 1];
+
+    const updatedCrt = [...crtOutput];
+    updatedCrt[crtRow] += spriteIndexes.includes(cycle % 40) ? '#' : '.';
+
+    return updatedCrt;
   }
 
   private updateSignalStrengthAndIntervalsIfInterval(

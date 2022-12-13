@@ -4,7 +4,7 @@ import FileProcessor from './file-processor';
 import { describe, it, expect } from '@jest/globals';
 
 describe('CathodeRayTube', () => {
-  it('should return the aggregate signal strength after processing instructions', () => {
+  it('should return the aggregate signal strength after processing instructions with one interval', () => {
     const instructions: IInstruction[] = [
       new Addx(15),
       new Addx(-11),
@@ -38,7 +38,7 @@ describe('CathodeRayTube', () => {
     ).toBe(420);
   });
 
-  it('should count the number of positions a single tail visited at least once', () => {
+  it('should return the aggregate signal strength after processing instructions with multiple intervals', () => {
     const instructions: IInstruction[] =
       FileProcessor.processInputIntoInstructions('src/example-input.txt');
 
@@ -69,6 +69,6 @@ describe('CathodeRayTube', () => {
     expect(
       CathodRayTube.calculateAggregatedOutput(instructions, [], screenDims)
         .crtOutput
-    ).toBe(expected);
+    ).toStrictEqual(expected);
   });
 });
