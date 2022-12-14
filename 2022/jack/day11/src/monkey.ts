@@ -29,14 +29,22 @@ export default class Monkey {
   }
 
   public throwItems(): ThrownItem[] {
-    const toThrow = this._items.map((item) => {
-      return {
-        monkey: this.test(item),
-        item,
-      };
-    });
+    const toThrow = this._items.map((item) =>
+      this.calculateToThrowLocation(item)
+    );
 
     this._items = [];
     return toThrow;
+  }
+
+  private calculateToThrowLocation(item: number) {
+    return {
+      monkey: this.test(item),
+      item,
+    };
+  }
+
+  public receiveItem(item: number): void {
+    this._items.push(item);
   }
 }

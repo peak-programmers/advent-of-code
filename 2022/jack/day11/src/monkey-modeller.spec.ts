@@ -31,7 +31,7 @@ describe('Monkey Modeller', () => {
     expect(monkey.items).toStrictEqual([500, 323]);
   });
 
-  it('should apply worry operation onto items and inspection count be number of items', () => {
+  it('should throw items after inspection to the correct monkeys', () => {
     const startingState: MonkeyState = {
       items: [79, 51],
       operation: (oldWorry: number) => oldWorry * 19,
@@ -47,5 +47,20 @@ describe('Monkey Modeller', () => {
     ];
 
     expect(monkey.throwItems()).toStrictEqual(expectedThrownItems);
+    expect(monkey.items).toStrictEqual([]);
+  });
+
+  it('should receive an item from another monkey', () => {
+    const startingState: MonkeyState = {
+      items: [79, 51],
+      operation: (oldWorry: number) => oldWorry * 19,
+      test: (worry: number) => (worry % 23 === 0 ? 2 : 3),
+    };
+
+    const monkey = new Monkey(startingState);
+
+    monkey.receiveItem(23);
+
+    expect(monkey.items).toStrictEqual([79, 51, 23]);
   });
 });
