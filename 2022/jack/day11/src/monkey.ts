@@ -1,4 +1,4 @@
-import { MonkeyState } from './types';
+import { MonkeyState, ThrownItem } from './types';
 
 export default class Monkey {
   private _items: number[];
@@ -26,5 +26,17 @@ export default class Monkey {
       this._itemInspectionCount++;
       return Math.floor(this.operation(item) / 3);
     });
+  }
+
+  public throwItems(): ThrownItem[] {
+    const toThrow = this._items.map((item) => {
+      return {
+        monkey: this.test(item),
+        item,
+      };
+    });
+
+    this._items = [];
+    return toThrow;
   }
 }
