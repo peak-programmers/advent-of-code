@@ -73,7 +73,7 @@ describe('Monkey Business', () => {
     it('should correctly model a group of monkeys throwing items', () => {
       const monkeys = FileProcessor.processInput('src/example-input.txt');
 
-      MonkeyModeller.model(monkeys, 20);
+      MonkeyModeller.playRounds(monkeys, 20);
 
       expect(MonkeyBusinessAnalyser.calculateMonkeyBusinessLevel(monkeys)).toBe(
         10605
