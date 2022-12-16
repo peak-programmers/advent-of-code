@@ -6,6 +6,7 @@ export default class MonkeyFactory {
 
     return new Monkey({
       items: JSON.parse('[' + lines[1].split(': ')[1] + ']'),
+      divisor: parseInt(lines[3].split(' ')[5]),
       operation: this.constructOperationFunction(lines),
       test: this.constructTestFunction(lines),
     });
@@ -13,6 +14,7 @@ export default class MonkeyFactory {
 
   private static constructOperationFunction(lines: string[]) {
     const rawOperation = lines[2].split(' ');
+
     return (oldWorry: number) =>
       this.calculateOperation(oldWorry, rawOperation[6], rawOperation[7]);
   }
@@ -22,18 +24,6 @@ export default class MonkeyFactory {
     rawOperand: string,
     rawArgument: string
   ): number {
-    const argument = parseInt(rawArgument);
-    if (argument) {
-      return (
-        {
-          '+': oldWorry + argument,
-          '-': oldWorry - argument,
-          '*': oldWorry * argument,
-          '/': oldWorry / argument,
-        }[rawOperand] ?? 0
-      );
-    }
-
     const validIntegerOperation = this.integerOperationIfValidInt(
       oldWorry,
       rawOperand,
@@ -51,15 +41,15 @@ export default class MonkeyFactory {
   ): number | undefined {
     const argument = parseInt(rawArgument);
     if (argument) {
-      return (
-        {
-          '+': oldWorry + argument,
-          '-': oldWorry - argument,
-          '*': oldWorry * argument,
-          '/': oldWorry / argument,
-        }[rawOperand] ?? undefined
-      );
+      return {
+        '+': oldWorry + argument,
+        '-': oldWorry - argument,
+        '*': oldWorry * argument,
+        '/': oldWorry / argument,
+      }[rawOperand];
     }
+
+    return undefined;
   }
 
   private static selfOperation(oldWorry: number, rawOperand: string): number {

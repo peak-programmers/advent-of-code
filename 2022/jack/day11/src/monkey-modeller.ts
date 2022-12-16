@@ -1,10 +1,19 @@
+import { Part } from './enum';
 import Monkey from './monkey';
 
 export default class MonkeyModeller {
-  static playRounds(monkeys: Monkey[], rounds: number) {
+  public static playRounds(monkeys: Monkey[], rounds: number, part: Part) {
+    const modulus = monkeys.reduce(
+      (acc: number, monkey: Monkey) => acc * monkey.divisor,
+      1
+    );
+
     for (let i = 0; i < rounds; i++) {
       monkeys.forEach((monkey) => {
-        monkey.takeTurn();
+        part === Part.One
+          ? monkey.part1TakeTurn()
+          : monkey.part2TakeTurn(modulus);
+
         const thrownItems = monkey.throwItems();
 
         thrownItems.forEach((monkeyItem) => {
